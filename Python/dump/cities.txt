@@ -1,0 +1,63 @@
+cities = [
+    "Portland, ME",
+    "Manchester, NH",
+    "Burlington, VT",
+    "Boston, MA",
+    "New York City, NY",
+    "Albany, NY",
+    "Buffalo, NY",
+    "Providence, RI",
+    "Hartford, CT",
+    "Philadelphia, PA",
+    "Pittsburgh, PA",
+    "Newark, NJ",
+    "Wilmington, DE",
+    "Baltimore, MD",
+    "Charleston, WV",
+    "Columbus, OH",
+    "Cleveland, OH",
+    "Richmond, VA",
+    "Charlotte, NC",
+    "Raleigh, NC",
+    "Louisville, KY",
+    "Nashville, TN",
+    "Memphis, TN",
+    "Columbia, SC",
+    "Atlanta, GA",
+    "Jacksonville, FL",
+    "Miami, FL",
+    "Orlando, FL",
+    "Detroit, MI",
+    "Indianapolis, IN"
+]
+
+Portland
+Manchester
+Burlington
+Boston
+New York City
+Albany
+Buffalo
+Providence
+Hartford
+Philadelphia
+Pittsburgh
+Newark
+Wilmington
+Baltimore
+Charleston
+Columbus
+Cleveland
+Richmond
+Charlotte
+Raleigh
+Louisville
+Nashville
+Memphis
+Columbia
+Atlanta
+Jacksonville
+Miami
+Orlando
+Detroit
+Indianapolis
