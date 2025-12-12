@@ -1,15 +1,16 @@
 import csv
 import random
 from datetime import date, timedelta
-import pandas as pd
-from PathFinder import PathFinder
+
 from CityGraph import CityGraph
+from PathFinder import PathFinder
 from map import plot_route
 
 BASE_MPG = 45.0
 MAX_MILES_PER_DAY = 8 * 75  # 600 miles/day
 PENALTY_FACTOR = 10.0  # used if direction penalty is enabled
-MAX_DAYS = 30
+MAX_DAYS = 30  #Max allowed travel
+#sample cities
 cities_list = [
     "Portland",
     "Manchester",
@@ -45,15 +46,32 @@ cities_list = [
 
 
 def collect_weather_data(weather_csv):
-    weather_df = pd.read_csv(weather_csv)
-    weather_df = weather_df.sort_values(['city'])
-    return {
-        city: group['condition'].tolist() for city,group in weather_df.groupby("city")
-    }
+    """
+    collect the weather data from csv
+    :param weather_csv: weather file
+    :return: dict of (city, weather)
+    """
+    weather = {}
+
+    with open(weather_csv, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            city = row["city"]
+            condition = row["condition"]
+            if city not in weather:
+                weather[city] = []  #initilize
+            weather[city].append(condition)
+    return weather
 
 
 
 def load_city_graph_from_csv(csv_path,weather_csv):
+    """
+    Load the csv file and instruct to create an undirected graph
+    :param csv_path: travel related data
+    :param weather_csv: weather related data
+    :return: graphs detail, like edges/ nodes
+    """
     cities = {}
     edges_base = []
     coordinates = {}
@@ -78,17 +96,14 @@ def load_city_graph_from_csv(csv_path,weather_csv):
             longitude_2 = float(row["to_lon"])
             days = float(row["travel_days"])
 
-
-            # Build cities dict
             if from_city not in cities:
                 cities[from_city] = {"elevation": elevation_from}
-                coordinates[from_city] = (latitude_1, longitude_1)
+                coordinates[from_city] = (latitude_1, longitude_1)  #get city coordinates
 
             if to_city not in cities:
                 cities[to_city] = {"elevation": elevation_to}
                 coordinates[to_city] = (latitude_2, longitude_2)
 
-            # Build edges_base entry
             edges_base.append({
                 "from": from_city,
                 "to": to_city,
@@ -98,7 +113,7 @@ def load_city_graph_from_csv(csv_path,weather_csv):
                 "days": days
             })
 
-    # Create a 30-day weather forecast for each city
+    #30-day weather forecast for each city
     weather = collect_weather_data(weather_csv)
 
     return cities, edges_base, weather, weather_risk_map, coordinates
@@ -173,15 +188,10 @@ def pick_random_cities(n):
 if __name__ == "__main__":
     cities, edges_base, weather, weather_risk_map, coordinates = load_city_graph_from_csv("travel_routes_final.csv",
                                                                                           "weather_november_2025 (1).csv")
-    # print(coordinates)
     cg = CityGraph(cities, edges_base, weather,
                    weather_risk_map,BASE_MPG,MAX_MILES_PER_DAY,MAX_DAYS,)
-
     multi_city = PathFinder(cg, coordinates, PENALTY_FACTOR, True)
-
-    N = 15
+    N = 15  #number of random cities as input
     travel_list = pick_random_cities(N)
-
-    result = multi_city.trip(travel_list)
-
+    result = multi_city.trip(travel_list)  #plan travel
     print(print_full_metadata(result, coordinates))

@@ -35,11 +35,9 @@ class CityGraph:
             self.adj[u].append((v, d))
             self.adj[v].append((u, d))
 
-        # Precompute daily edge info: list indexed by day, map edge_key -> info
         self.daily_edge_info = []
         self.build_daily_edge_info()
-
-        # reachable cache: reachable[day][source] -> {dest: {cost, distance, path, edges}}
+        #list of reachable cities for a given node
         self.reachable = [defaultdict(dict) for _ in range(self.days)]
 
     def build_daily_edge_info(self):
